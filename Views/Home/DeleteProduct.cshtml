@@ -1,0 +1,24 @@
+﻿@model Inventory_Management.Models.Product
+
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<h1>Delete Product</h1>
+<h3>Are you sure you want to delete this product?</h3>
+
+<div>
+    <p>Name: @Model.Name</p>
+    <p>Description: @Model.Description</p>
+    <p>Price: @Model.Price.ToString("C")</p>
+    <p>Quantity: @Model.Quantity</p>
+    <p>Category: @Model.Category</p>
+</div>
+
+<form asp-action="DeleteProductConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit">Yes, Delete</button>
+
+    <a asp-action="Index">Cancel</a>
+</form>

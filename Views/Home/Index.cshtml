@@ -1,0 +1,91 @@
+﻿@model List<Inventory_Management.Models.Product>
+@{
+    ViewData["Title"] = "Inventory Management";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+<h1>Inventory Management</h1>
+<a asp-action="AddProduct" class="btn btn-primary">Add New Product</a>
+</div>
+
+<h2 class="mb-3">Product Details</h2>
+
+
+<form asp-action="Index" method="get" class="row g-2 align-items-center mb-3">
+<div class="col-md-4">
+    <input type="text" name="searchString" class="form-control" placeholder="Search products..." value="@ViewBag.SearchString" />
+</div>
+<div class="col-md-3">
+    <select name="category" class="form-select">
+        <option value="">All Categories</option>
+        @foreach (var category in ViewBag.Categories)
+        {
+            <option value="@category" selected="@(category == ViewBag.SelectedCategory)">@category</option>
+        }
+    </select>
+</div>
+
+<div class="col-md-3">
+    <select name="sortOrder" class="form-select">
+        <option value="">Sort By</option>
+        <option value="name" selected="@(ViewBag.SortOrder == "name")">Name (A-Z)</option>
+        <option value="price" selected="@(ViewBag.SortOrder == "price")">Price (Low to High)</option>
+        <option value="quantity" selected="@(ViewBag.SortOrder == "quantity")">Quantity (Low to High)</option>
+    </select>
+</div>
+<div class="col-auto">
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a asp-action="Index" class="btn btn-secondary">Clear Search</a>
+</div>
+
+</form>
+
+<div class="dashboard-summary">
+    <div class="summary-card">
+        <h3>Total Products</h3>
+        <p>@ViewBag.TotalProducts</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Total Items in Stock</h3>
+        <p>@ViewBag.TotalQuantity</p>
+    </div>
+
+    <div class="summary-card @(ViewBag.LowStockProducts > 0 ? "low-stock-alert" : "stock-ok")">
+        <h3>Low Stock Products</h3>
+        <p>@ViewBag.LowStockProducts</p>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+<p>No products found. Try another search.</p>
+}
+<div class="product-grid">
+@foreach (var product in Model)
+{
+
+<div class="product-card">
+    <p>Name: @product.Name</p>
+    <p>Description: @product.Description</p>
+    <p>Price: @product.Price.ToString("C")</p>
+    <p>Quantity: @product.Quantity</p>
+
+        @if (product.Quantity < 10)
+        {
+            <p class="low-stock">Low Stock!</p>
+        }
+        else
+        {
+            <p class="in-stock">In Stock</p>
+        }
+
+    <p>Category: @product.Category</p>
+    <p>Available: @(product.IsAvailable ? "Yes" : "No")</p>
+
+    <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary me-2">Edit</a>
+    <a asp-action="DeleteProduct" asp-route-id="@product.Id" class="btn btn-sm btn-outline-danger me-2">Delete</a>
+</div>
+
+}
+</div> 
+
